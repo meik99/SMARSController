@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/meik99/CoffeeToGO/db"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -58,7 +59,7 @@ func redirect(w http.ResponseWriter, r *http.Request) {
 	id := ""
 	if claims, isMapClaims := token.Claims.(jwt.MapClaims); isMapClaims {
 		log.Printf("signed in: '%s'\n", claims["email"])
-		id = saveTokenForAccount(claims["email"].(string), string(responseBodyData))
+		id = db.saveTokenForAccount(claims["email"].(string), string(responseBodyData))
 	}
 
 	returnParams := url.Values{}
