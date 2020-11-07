@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  alarmApi: 'http://localhost:8081/apps/coffeetogo/api/v1/alarm',
+  authApi: 'http://localhost:8080/apps/coffeetogo/api/v1/sso/google'
 };
 
 /*

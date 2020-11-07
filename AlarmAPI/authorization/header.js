@@ -2,6 +2,11 @@ const code = require("./code");
 
 module.exports = {
     authorize: (req, res, next) => {
+        if(req.path === '/apps/coffeetogo/api/v1/alarm/health') {
+            next();
+            return;
+        }
+
         const authorizationHeader = req.header("Authorization")
         if (!authorizationHeader) {
             res
