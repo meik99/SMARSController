@@ -19,14 +19,14 @@ func getDB() *couchdb.Database {
 	return db
 }
 
-func saveTokenForAccount(email string, token string) string {
+func saveTokenForAccount(email string, token tokens) string {
 	results, err := getDB().Query([]string{"_id"}, fmt.Sprintf(`email == "%s"`, email),
 		nil, nil, nil, nil)
 	if err != nil {
 		log.Println(err.Error(), err)
 		return ""
 	}
-	log.Println(results)
+
 	if len(results) > 0 {
 		for _, result := range results {
 			err = getDB().Delete(result["_id"].(string))

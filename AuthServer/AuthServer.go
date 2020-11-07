@@ -71,7 +71,7 @@ func redirect(w http.ResponseWriter, r *http.Request) {
 
 	id := ""
 	if claims, isMapClaims := token.Claims.(jwt.MapClaims); isMapClaims {
-		id = saveTokenForAccount(claims["email"].(string), string(responseBodyData))
+		id = saveTokenForAccount(claims["email"].(string), responseTokens)
 	}
 
 	returnParams := url.Values{}
