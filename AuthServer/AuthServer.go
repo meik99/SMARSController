@@ -20,6 +20,7 @@ const (
 var credentials googleCredentials
 
 func redirect(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	log.Println("finalizing authorization")
 	values, err := url.ParseQuery(r.URL.RawQuery)
 	if err != nil {
@@ -89,6 +90,7 @@ func redirect(w http.ResponseWriter, r *http.Request) {
 }
 
 func authorize(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	log.Println("building parameters for google sso")
 	requestQuery, err := url.ParseQuery(r.URL.RawQuery)
 	if err != nil {
@@ -112,9 +114,22 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, uri, http.StatusSeeOther)
 }
 
-func test(w http.ResponseWriter, _ *http.Request) {
+func health(w http.ResponseWriter, _ *http.Request) {
+	enableCors(&w)
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte("success"))
+	w.Header().Set("Content-Type", "application/json")
+
+	type response struct {
+		Status  int    `json:"status"`
+		Message string `json:"message"`
+	}
+	err := json.NewEncoder(w).Encode(response{
+		Status:  200,
+		Message: "success",
+	})
+	if err != nil {
+		log.Println(err.Error(), err)
+	}
 }
 
 func handleError(msg string, errorCode int, w http.ResponseWriter, r *http.Request) {
@@ -139,10 +154,14 @@ func handleError(msg string, errorCode int, w http.ResponseWriter, r *http.Reque
 	}
 }
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
+
 func handleRequests() {
 	http.HandleFunc("/apps/coffeetogo/api/v1/sso/google", authorize)
 	http.HandleFunc("/apps/coffeetogo/api/v1/sso/google/redirect", redirect)
-	http.HandleFunc("/apps/coffeetogo/api/v1/sso/google/test", test)
+	http.HandleFunc("/apps/coffeetogo/api/v1/sso/google/health", health)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 

@@ -26,6 +26,7 @@ app.use(cors());
 
 app.use(header.authorize);
 
+app.get('/apps/coffeetogo/api/v1/alarm/health', (req, res) => res.send({status: 200, message: 'Success'}));
 app.use('/apps/coffeetogo/api/v1/alarm', alarmRouter);
 
 module.exports = app;
