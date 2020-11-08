@@ -48,6 +48,7 @@ public class ControlController {
 
         return new ResponseEntity<>(
                 makeResponse(HttpStatus.OK.value(), "success"),
+
                 HttpStatus.OK);
     }
 

@@ -37,12 +37,35 @@ module.exports = {
             if (isValid) {
                 next();
             } else {
-                res
-                    .status(401)
-                    .send({
-                        code: 401,
-                        message: "invalid code"
-                    });
+                code.getApiKeyByCode(authCode, (err, apiKey) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                   if (!apiKey) {
+                       res
+                           .status(401)
+                           .send({
+                               code: 401,
+                               message: "invalid code"
+                           });
+                       return;
+                   }
+                   for (let scope of apiKey.scopes) {
+                        const scopeParts = scope.split(":");
+                        if (scopeParts.length >= 2 && scopeParts[1] !== "") {
+                            if(req.method.toLowerCase() === scopeParts[0] && req.path.indexOf(scopeParts[1]) >= 0) {
+                                next();
+                                return;
+                            }
+                        }
+                   }
+                    res
+                        .status(401)
+                        .send({
+                            code: 401,
+                            message: `api key is missing scope: ${req.method.toLowerCase()}:<entity>`
+                        });
+                });
             }
         });
     }

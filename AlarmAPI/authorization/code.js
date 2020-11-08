@@ -45,5 +45,20 @@ module.exports = {
             // Only my email is allowed, fuck every other email
             next(err, id === "michaelrynkiewicz3@gmail.com");
         });
+    },
+
+    /**
+     * @param {string} code Code that refers to an auth token
+     * @param {function(err, ApiKey)} next Function that is called when token has been validated
+     */
+    getApiKeyByCode: (code, next) => {
+        db.getApiKeyByCode(code, (err, apiKey) => {
+            if (err) {
+                console.log(err);
+                next(err, null);
+                return;
+            }
+            next(err, apiKey);
+        })
     }
 }
