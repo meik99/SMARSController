@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/meik99/CoffeeToGO/AuthServer/credentials"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -12,12 +13,19 @@ import (
 )
 
 const (
-	RedirectUri = "http://localhost:8080/apps/coffeetogo/api/v1/sso/google/redirect"
-
 	CredentialsPath = "client_secret_723945016868-kh3kloreb5uldrneieshhpii939uitgf.apps.googleusercontent.com.json"
 )
 
-var credentials googleCredentials
+var oauthCredentials credentials.OAuthCredentials
+
+var host = os.Getenv("COFFEE_AUTH_HOST")
+var port = os.Getenv("COFFEE_AUTH_PORT")
+var protocol = os.Getenv("COFFEE_AUTH_PROTOCOL")
+var path = os.Getenv("COFFEE_AUTH_PATH")
+var mainUri = fmt.Sprintf("%s://%s:%s%s", protocol, host, port, path)
+var redirectPath = fmt.Sprintf("%s/redirect", path)
+var healthPath = fmt.Sprintf("%s/health", path)
+var redirectUri = fmt.Sprintf("%s/redirect", mainUri)
 
 func redirect(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
@@ -31,13 +39,13 @@ func redirect(w http.ResponseWriter, r *http.Request) {
 	}
 
 	params := url.Values{}
-	params.Add("client_id", credentials.Web.ClientId)
-	params.Add("client_secret", credentials.Web.ClientSecret)
+	params.Add("client_id", oauthCredentials.ClientId)
+	params.Add("client_secret", oauthCredentials.ClientSecret)
 	params.Add("code", values.Get("code"))
 	params.Add("grant_type", "authorization_code")
-	params.Add("redirect_uri", RedirectUri)
+	params.Add("redirect_uri", redirectUri)
 
-	response, err := http.PostForm(credentials.Web.TokenURI, params)
+	response, err := http.PostForm(oauthCredentials.TokenURI, params)
 	if err != nil {
 		log.Println("could not request auth tokens")
 		log.Println(err.Error(), err)
@@ -105,10 +113,10 @@ func authorize(w http.ResponseWriter, r *http.Request) {
 	params.Add("access_type", "offline")
 	params.Add("include_granted_scopes", "true")
 	params.Add("response_type", "code")
-	params.Add("redirect_uri", RedirectUri)
+	params.Add("redirect_uri", redirectUri)
 	params.Add("state", requestQuery.Get("state"))
-	params.Add("client_id", credentials.Web.ClientId)
-	uri := fmt.Sprintf("%s?%s", credentials.Web.AuthURI, params.Encode())
+	params.Add("client_id", oauthCredentials.ClientId)
+	uri := fmt.Sprintf("%s?%s", oauthCredentials.AuthURI, params.Encode())
 
 	log.Println("redirecting to google sso")
 	http.Redirect(w, r, uri, http.StatusSeeOther)
@@ -159,10 +167,35 @@ func enableCors(w *http.ResponseWriter) {
 }
 
 func handleRequests() {
+	if host == "" {
+		log.Fatalln("environment variable COFFEE_AUTH_HOST not set")
+	}
+	if port == "" {
+		log.Fatalln("environment variable COFFEE_AUTH_PORT not set")
+	}
+	if protocol == "" {
+		log.Fatalln("environment variable COFFEE_AUTH_PROTOCOL not set")
+	}
+	if path == "" {
+		log.Fatalln("environment variable COFFEE_AUTH_PATH not set")
+	}
+
+	log.Printf("using '%s' as host", host)
+	log.Printf("using '%s' as port", port)
+	log.Printf("using '%s' as protocol", protocol)
+	log.Printf("using '%s' as main path", path)
+
+	log.Printf("mounting '%s' as authorization path", path)
 	http.HandleFunc("/apps/coffeetogo/api/v1/sso/google", authorize)
+
+	log.Printf("mounting '%s' as redirect path", redirectPath)
 	http.HandleFunc("/apps/coffeetogo/api/v1/sso/google/redirect", redirect)
+
+	log.Printf("mounting '%s' as health path", healthPath)
 	http.HandleFunc("/apps/coffeetogo/api/v1/sso/google/health", health)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+
+	log.Printf("mounting app on port '%s", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }
 
 func main() {
@@ -172,24 +205,12 @@ func main() {
 }
 
 func readCredentials() {
-	credentialsJson, err := os.Open(CredentialsPath)
-	if err != nil {
-		log.Fatalf(err.Error(), err)
-	}
-	defer func() {
-		err := credentialsJson.Close()
-		if err != nil {
-			log.Fatalf(err.Error(), err)
-		}
-	}()
+	credentialsProvider := credentials.NewGoogleFileProvider(CredentialsPath)
+	oauth, err := credentialsProvider.GetCredentials()
 
-	credentialsJsonData, err := ioutil.ReadAll(credentialsJson)
 	if err != nil {
-		log.Fatalf(err.Error(), err)
+		log.Fatalln(err)
 	}
 
-	err = json.Unmarshal(credentialsJsonData, &credentials)
-	if err != nil {
-		log.Fatalf(err.Error(), err)
-	}
+	oauthCredentials = oauth
 }

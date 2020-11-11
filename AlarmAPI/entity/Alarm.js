@@ -8,12 +8,14 @@ module.exports = class Alarm {
                 this._rev = args._rev;
             }
             if (args.hour) {
-                this.hour = args.hour;
+                const hour = parseInt(args.hour);
+                this.hour = isNaN(hour) ? -1 : hour;
             } else {
                 this.hour = 0;
             }
             if (args.minute) {
-                this.minute = args.minute;
+                const minute = parseInt(args.minute);
+                this.minute = isNaN(minute) ? -1 : minute;
             } else {
                 this.minute = 0;
             }
