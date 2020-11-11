@@ -1,5 +1,6 @@
 const nano = require('nano');
 const Alarm = require("../entity/Alarm");
+const ApiKey = require("../entity/ApiKey");
 
 // "http://%s:%s@%s:5984/authentication", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST")
 const url = `http://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:5984`
@@ -32,6 +33,35 @@ module.exports = {
                         next(err, result.docs[0]);
                     }
                 }
+            });
+    },
+
+    /**
+     * Finds the api key saved in the database by the code given
+     *
+     * @param{string} code string that represents the api-key
+     * @param{function(err, ApiKey)} next function that takes a parameter for eventual error and for the api-key saved in the database according to the code
+     * */
+    getApiKeyByCode: (code, next) => {
+        connection
+            .use("api_keys")
+            .find({
+                selector: {
+                    "_id": {
+                        "$eq": code
+                    }
+                }
+            }, (err, result) => {
+               if (err) {
+                   console.log(err);
+                   next(err, null);
+               }  else {
+                   if (result.docs.length <= 0) {
+                       next(err, null);
+                   } else {
+                       next(err, new ApiKey(result.docs[0]));
+                   }
+               }
             });
     },
 
