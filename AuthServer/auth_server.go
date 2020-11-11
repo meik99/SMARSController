@@ -140,7 +140,7 @@ func health(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
-func handleError(msg string, errorCode int, w http.ResponseWriter, r *http.Request) {
+func handleError(msg string, errorCode int, w http.ResponseWriter, _ *http.Request) {
 	type errorMessage struct {
 		message string
 		code    int
@@ -205,7 +205,17 @@ func main() {
 }
 
 func readCredentials() {
-	credentialsProvider := credentials.NewGoogleFileProvider(CredentialsPath)
+	var credentialsProvider credentials.Provider
+	envCredentials := os.Getenv("COFFEE_AUTH_CREDENTIALS")
+
+	if envCredentials != "" {
+		log.Println("using credentials from environment")
+		credentialsProvider = credentials.NewGoogleEnvironmentProvider("COFFEE_AUTH_CREDENTIALS")
+	} else {
+		log.Println("using credentials from file")
+		credentialsProvider = credentials.NewGoogleFileProvider(CredentialsPath)
+	}
+
 	oauth, err := credentialsProvider.GetCredentials()
 
 	if err != nil {
