@@ -8,6 +8,24 @@ import (
 )
 
 func connectionUrl() string {
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbHost := os.Getenv("DB_HOST")
+
+	if dbUser == "" {
+		log.Println("environment variable DB_USER is not set")
+	} else {
+		log.Printf("using user '%s' to connect to database", dbUser)
+	}
+	if dbPassword == "" {
+		log.Println("environment variable DB_PASSWORD is not set")
+	}
+	if dbHost == "" {
+		log.Println("environment variable DB_HOST is not set")
+	} else {
+		log.Printf("using host '%s' to connect to database", dbHost)
+	}
+
 	return fmt.Sprintf("http://%s:%s@%s:5984/authentication", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"))
 }
 
