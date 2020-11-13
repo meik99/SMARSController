@@ -1,6 +1,7 @@
 package credentials
 
 import (
+	"github.com/meik99/CoffeeToGO/AuthServer/auth_json"
 	"io"
 	"log"
 	"os"
@@ -30,7 +31,7 @@ func (gfp *googleFileProvider) GetCredentials() (OAuthCredentials, error) {
 	var gCredentials googleCredentials
 	credentialsJson := gfp.credentialsSourceFn(gfp)
 
-	err := fromReader(credentialsJson, &gCredentials)
+	err := auth_json.ParseJSONToInterface(credentialsJson, &gCredentials)
 	if err != nil {
 		return OAuthCredentials{}, err
 	}

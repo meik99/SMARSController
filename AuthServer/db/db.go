@@ -1,13 +1,32 @@
-package main
+package db
 
 import (
 	"fmt"
 	"github.com/leesper/couchdb-golang"
+	"github.com/meik99/CoffeeToGO/AuthServer/credentials"
 	"log"
 	"os"
 )
 
 func connectionUrl() string {
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbHost := os.Getenv("DB_HOST")
+
+	if dbUser == "" {
+		log.Println("environment variable DB_USER is not set")
+	} else {
+		log.Printf("using user '%s' to connect to database", dbUser)
+	}
+	if dbPassword == "" {
+		log.Println("environment variable DB_PASSWORD is not set")
+	}
+	if dbHost == "" {
+		log.Println("environment variable DB_HOST is not set")
+	} else {
+		log.Printf("using host '%s' to connect to database", dbHost)
+	}
+
 	return fmt.Sprintf("http://%s:%s@%s:5984/authentication", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"))
 }
 
@@ -19,7 +38,7 @@ func getDB() *couchdb.Database {
 	return db
 }
 
-func saveTokenForAccount(email string, token tokens) string {
+func SaveTokenForAccount(email string, token credentials.AuthToken) string {
 	results, err := getDB().Query([]string{"_id"}, fmt.Sprintf(`email == "%s"`, email),
 		nil, nil, nil, nil)
 	if err != nil {

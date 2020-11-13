@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coffee-auth-server
+  namespace: coffee-to-go
+spec:
+  selector:
+    matchLabels:
+      app: coffee-to-go
+      type: authserver
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: coffee-to-go
+        type: authserver
+    spec:
+      containers:
+        - name: coffee-auth-server
+          image: meik99/coffee-auth-server

@@ -1,6 +1,6 @@
-package main
+package credentials
 
-type tokens struct {
+type AuthToken struct {
 	AccessToken string `json:"access_token"`
 	ExpiresIn   int    `json:"expires_in"`
 	Scope       string `json:"scope"`
