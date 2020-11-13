@@ -15,6 +15,18 @@ type Api interface {
 	Start()
 }
 
+type response struct {
+	Status  int    `json:"status"`
+	Message string `json:"message"`
+}
+
+func newSuccessResponse() response {
+	return response{
+		Status:  200,
+		Message: "success",
+	}
+}
+
 type AuthApi struct {
 	protocol         string
 	host             string

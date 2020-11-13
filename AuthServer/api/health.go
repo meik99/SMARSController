@@ -19,18 +19,16 @@ func (authApi *AuthApi) buildHealthPath() string {
 
 func (authApi *AuthApi) health(w http.ResponseWriter, _ *http.Request) {
 	enableCors(&w)
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
+	err := sendHealthResponse(w)
 
-	type response struct {
-		Status  int    `json:"status"`
-		Message string `json:"message"`
-	}
-	err := json.NewEncoder(w).Encode(response{
-		Status:  200,
-		Message: "success",
-	})
 	if err != nil {
 		log.Println(err.Error(), err)
 	}
+}
+
+func sendHealthResponse(w http.ResponseWriter) error {
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+
+	return json.NewEncoder(w).Encode(newSuccessResponse())
 }
