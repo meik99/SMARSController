@@ -46,13 +46,7 @@ func (r *AuthServerReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) 
 	_ = r.Log.WithValues("authserver", req.NamespacedName)
 
 	// your logic here
-	var instance coffeev1.AuthServer
-	err := r.Get(context.TODO(), client.ObjectKey{Name: InstanceName, Namespace: coffeev1.Namespace}, &instance)
-	if err != nil {
-		return RequeueAfterFiveMinutes(), err
-	}
-
-	return RequeueAfterFiveMinutes(), nil
+	return r.ReconcileAuthServer()
 }
 
 func RequeueAfterFiveMinutes() ctrl.Result {

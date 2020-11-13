@@ -31,9 +31,6 @@ const (
 type AuthServerSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of AuthServer. Edit AuthServer_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
 }
 
 // AuthServerStatus defines the observed state of AuthServer
