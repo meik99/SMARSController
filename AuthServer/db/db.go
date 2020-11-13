@@ -1,8 +1,9 @@
-package main
+package db
 
 import (
 	"fmt"
 	"github.com/leesper/couchdb-golang"
+	"github.com/meik99/CoffeeToGO/AuthServer/credentials"
 	"log"
 	"os"
 )
@@ -37,7 +38,7 @@ func getDB() *couchdb.Database {
 	return db
 }
 
-func saveTokenForAccount(email string, token tokens) string {
+func SaveTokenForAccount(email string, token credentials.AuthToken) string {
 	results, err := getDB().Query([]string{"_id"}, fmt.Sprintf(`email == "%s"`, email),
 		nil, nil, nil, nil)
 	if err != nil {

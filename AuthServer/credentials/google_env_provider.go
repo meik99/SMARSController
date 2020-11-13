@@ -1,6 +1,7 @@
 package credentials
 
 import (
+	"github.com/meik99/CoffeeToGO/AuthServer/auth_json"
 	"os"
 	"strings"
 )
@@ -17,7 +18,7 @@ func NewGoogleEnvironmentProvider(envVarName string) Provider {
 
 func (gep *googleEnvironmentProvider) GetCredentials() (OAuthCredentials, error) {
 	var gCredentials googleCredentials
-	err := fromReader(strings.NewReader(os.Getenv(gep.envVarName)), &gCredentials)
+	err := auth_json.ParseJSONToInterface(strings.NewReader(os.Getenv(gep.envVarName)), &gCredentials)
 	if err != nil {
 		return OAuthCredentials{}, err
 	}

@@ -1,11 +1,5 @@
 package credentials
 
-import (
-	"encoding/json"
-	"io"
-	"io/ioutil"
-)
-
 type Provider interface {
 	GetCredentials() (OAuthCredentials, error)
 }
@@ -21,14 +15,4 @@ type OAuthCredentials struct {
 	TokenURI            string `json:"token_uri"`
 	AuthProviderCertURL string `json:"auth_provider_x509_cert_url"`
 	ClientSecret        string `json:"client_secret"`
-}
-
-func fromReader(reader io.Reader, v interface{}) error {
-	credentialsJsonData, err := ioutil.ReadAll(reader)
-	if err != nil {
-		return err
-	}
-
-	err = json.Unmarshal(credentialsJsonData, &v)
-	return err
 }
