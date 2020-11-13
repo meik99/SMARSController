@@ -1,0 +1,20 @@
+# permissions for end users to view authservers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: authserver-viewer-role
+rules:
+- apiGroups:
+  - coffeetogo.rynkbit.com
+  resources:
+  - authservers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - coffeetogo.rynkbit.com
+  resources:
+  - authservers/status
+  verbs:
+  - get

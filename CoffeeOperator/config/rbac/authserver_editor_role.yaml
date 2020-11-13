@@ -1,0 +1,24 @@
+# permissions for end users to edit authservers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: authserver-editor-role
+rules:
+- apiGroups:
+  - coffeetogo.rynkbit.com
+  resources:
+  - authservers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - coffeetogo.rynkbit.com
+  resources:
+  - authservers/status
+  verbs:
+  - get
