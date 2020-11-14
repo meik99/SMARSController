@@ -22,6 +22,7 @@ import (
 
 const (
 	Namespace = "coffee-to-go"
+	AppName   = "coffee-to-go"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!

@@ -60,3 +60,8 @@ func (r *AuthServerReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		For(&coffeev1.AuthServer{}).
 		Complete(r)
 }
+
+func (r *AuthServerReconciler) logError(err error) (ctrl.Result, error) {
+	r.Log.Error(err, err.Error())
+	return RequeueAfterFiveMinutes(), err
+}

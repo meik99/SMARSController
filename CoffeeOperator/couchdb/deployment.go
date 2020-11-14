@@ -1,31 +1,20 @@
-package authserver
+package couchdb
 
 import (
 	coffeev1 "github.com/meik99/CoffeeToGO/CoffeeOperator/api/v1"
 	v1 "k8s.io/api/apps/v1"
 	v12 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
 const (
-	Name     = "coffee-auth-server"
-	Replicas = 1
-	Image    = "meik99/coffee-auth-server:latest"
-
-	InitialDelaySeconds = 5
-	PeriodSeconds       = 5
-	FailureThreshold    = 5
-
-	HealthPath = "/apps/coffeetogo/api/v1/sso/google/health"
-	HealthPort = 8080
+	Name             = "coffee-couchdb"
+	Replicas         = 1
+	Image            = "couchdb:latest"
+	SecretVolumeName = "coffee-couchdb-secret-volume"
 )
 
-func BuildAuthServerDeployment() *v1.Deployment {
-	return buildDeployment()
-}
-
-func buildDeployment() *v1.Deployment {
+func BuildDeployment() *v1.Deployment {
 	return &v1.Deployment{
 		ObjectMeta: buildDeploymentObjectMeta(),
 		Spec:       buildDeploymentSpec(),
@@ -40,13 +29,6 @@ func buildDeploymentObjectMeta() metav1.ObjectMeta {
 	}
 }
 
-func buildDeploymentLabels() map[string]string {
-	return map[string]string{
-		"app":  coffeev1.AppName,
-		"type": Name,
-	}
-}
-
 func buildDeploymentSpec() v1.DeploymentSpec {
 	var replicas int32 = Replicas
 
@@ -54,6 +36,13 @@ func buildDeploymentSpec() v1.DeploymentSpec {
 		Replicas: &replicas,
 		Selector: buildDeploymentSelector(),
 		Template: buildDeploymentTemplate(),
+	}
+}
+
+func buildDeploymentLabels() map[string]string {
+	return map[string]string{
+		"app":  coffeev1.AppName,
+		"type": Name,
 	}
 }
 
@@ -86,31 +75,20 @@ func buildDeploymentPodSpec() v12.PodSpec {
 
 func buildContainer() v12.Container {
 	return v12.Container{
-		Name:           Name,
-		Image:          Image,
-		LivenessProbe:  buildProbe(),
-		ReadinessProbe: buildProbe(),
+		Name:  Name,
+		Image: Image,
+		EnvFrom: []v12.EnvFromSource{
+			buildEnvsFromSecret(),
+		},
 	}
 }
 
-func buildProbe() *v12.Probe {
-	return &v12.Probe{
-		Handler:             buildProbeHandler(),
-		InitialDelaySeconds: InitialDelaySeconds,
-		PeriodSeconds:       PeriodSeconds,
-		FailureThreshold:    FailureThreshold,
-	}
-}
-
-func buildProbeHandler() v12.Handler {
-	return v12.Handler{
-		HTTPGet: buildProbeHandlerAction(),
-	}
-}
-
-func buildProbeHandlerAction() *v12.HTTPGetAction {
-	return &v12.HTTPGetAction{
-		Path: HealthPath,
-		Port: intstr.IntOrString{IntVal: HealthPort},
+func buildEnvsFromSecret() v12.EnvFromSource {
+	return v12.EnvFromSource{
+		SecretRef: &v12.SecretEnvSource{
+			LocalObjectReference: v12.LocalObjectReference{
+				Name: SecretName,
+			},
+		},
 	}
 }
