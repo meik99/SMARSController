@@ -2,6 +2,5 @@ apiVersion: coffeetogo.rynkbit.com/v1
 kind: AuthServer
 metadata:
   name: coffee-authserver
-spec:
-  # Add fields here
-  foo: bar
+  namespace: coffee-to-go
+#spec:
