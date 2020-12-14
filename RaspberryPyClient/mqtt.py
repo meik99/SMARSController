@@ -76,11 +76,11 @@ class Mqtt:
                     logging.debug(properties)
                     logging.debug(body)
 
+                    self.channel.basic_ack(method_frame.delivery_tag)
+
                     for callback in self.callbacks:
                         callback(body)
-
                     # Acknowledge the message
-                    self.channel.basic_ack(method_frame.delivery_tag)
 
                     if self.connected is False:
                         break
