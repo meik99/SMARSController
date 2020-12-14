@@ -54,6 +54,16 @@ class Mqtt:
         else:
             logging.error("cannot disconnect from mqtt broker because no connection exists. call connect() first")
 
+    def send(self, message):
+        if self.connected is True:
+            try:
+                self.channel.basic_publish(
+                    exchange='',
+                    routing_key=self.queue,
+                    body=message)
+            except Exception as e:
+                logging.error(e)
+
     def blocking_retrieve(self):
         if self.connected is False:
             logging.info("cannot retrieve data. connection does not exist. call connect() first")
@@ -78,4 +88,4 @@ class Mqtt:
                 if self.connected is False:
                     logging.info("retrieval of messages exited normally")
                 else:
-                    logging.error(e.with_traceback())
+                    logging.error(e)
