@@ -13,3 +13,8 @@ paho-mqtt="0.7.1"
 tokio = { version = "0.2.22", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
 chrono = "0.4.19"
+
+[target.arm-unknown-linux-musleabi]
+linker = "arm-linux-gnueabihf-ld"
+[target.x86_64-linux-musleabi]
+linker = "x86_64-linux-gnueabihf-ld"

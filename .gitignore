@@ -126,6 +126,6 @@ dist
 .vscode-test
 
 # End of https://www.toptal.com/developers/gitignore/api/node
-/RaspberryClient/target/
+#/RaspberryClient/target/
 
 deployment
