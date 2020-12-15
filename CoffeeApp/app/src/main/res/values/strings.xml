@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CoffeeApp</string>
+    <string name="make_coffee">Make Coffee</string>
+    <string name="set_username_messaging_service">Set username for messaging service</string>
+    <string name="set_password_messaging_service">Set password for messaging service</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="messaging_username">Messaging username</string>
+    <string name="messaging_password">Messaging password</string>
+    <string name="setup_messaging_credentials">Setup messaging credentials</string>
+</resources>

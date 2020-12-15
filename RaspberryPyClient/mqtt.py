@@ -1,5 +1,6 @@
 import pika
 import ssl
+import threading
 import logging
 from pika.exceptions import StreamLostError
 
@@ -68,24 +69,27 @@ class Mqtt:
         if self.connected is False:
             logging.info("cannot retrieve data. connection does not exist. call connect() first")
         else:
-            try:
-                for method_frame, properties, body in self.channel.consume(self.queue):
+            while self.connected:
+                try:
+                    for method_frame, properties, body in self.channel.consume(self.queue):
 
-                    # Display the message parts
-                    logging.debug(method_frame)
-                    logging.debug(properties)
-                    logging.debug(body)
+                        # Display the message parts
+                        logging.debug(method_frame)
+                        logging.debug(properties)
+                        logging.debug(body)
 
-                    self.channel.basic_ack(method_frame.delivery_tag)
+                        self.channel.basic_ack(method_frame.delivery_tag)
 
-                    for callback in self.callbacks:
-                        callback(body)
-                    # Acknowledge the message
+                        for callback in self.callbacks:
+                            thread = threading.Thread(target=callback, args=(body,))
+                            thread.start()
 
+                        # Acknowledge the message
+
+                        if self.connected is False:
+                            break
+                except Exception as e:
                     if self.connected is False:
-                        break
-            except Exception as e:
-                if self.connected is False:
-                    logging.info("retrieval of messages exited normally")
-                else:
-                    logging.error(e)
+                        logging.info("retrieval of messages exited normally")
+                    else:
+                        logging.error(e)
