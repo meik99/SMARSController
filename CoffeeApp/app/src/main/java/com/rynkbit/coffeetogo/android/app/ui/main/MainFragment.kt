@@ -1,16 +1,14 @@
 package com.rynkbit.coffeetogo.android.app.ui.main
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.google.android.material.snackbar.Snackbar
 import com.rynkbit.coffeetogo.android.app.R
@@ -42,6 +40,7 @@ class MainFragment : Fragment() {
         viewModel.messagingPassword.observe(viewLifecycleOwner, {
             updateButton()
         })
+        Credentials().putDataToWatch(requireContext())
     }
 
     override fun onResume() {
@@ -49,11 +48,11 @@ class MainFragment : Fragment() {
         viewModel.updateMessagingCredentials()
     }
 
-    fun updateButton() {
+    private fun updateButton() {
         if (viewModel.messagingUser.value?.isNotEmpty() == true &&
             viewModel.messagingPassword.value?.isNotEmpty() == true) {
             createMakeCoffeeButton()
-            Credentials().putDataToWatch(requireContext(), viewModel.viewModelScope)
+            Credentials().putDataToWatch(requireContext())
             Log.i(MainFragment::class.java.simpleName, "Synchronized data")
         } else {
             createSetCredentialsButton()

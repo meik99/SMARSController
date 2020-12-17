@@ -9,22 +9,10 @@
     tools:deviceIds="wear"
     android:id="@+id/activityView">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/btnMakeCoffee"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/make_coffee"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <fragment
+        android:id="@+id/fragment"
+        android:name="com.rynkbit.coffeetogo.android.watch.MainFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </androidx.wear.widget.BoxInsetLayout>

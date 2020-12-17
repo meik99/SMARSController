@@ -3,13 +3,8 @@ package com.rynkbit.coffeetogo.android.app.logic.settings
 import android.content.Context
 import android.util.Log
 import androidx.preference.PreferenceManager
-import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
-import com.google.android.play.core.tasks.Tasks
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class Credentials {
     companion object {
@@ -27,7 +22,7 @@ class Credentials {
         return sharedPreferences.getString(messagingPasswordKey, "") ?: ""
     }
 
-    fun putDataToWatch(context: Context, viewModelScope: CoroutineScope) {
+    fun putDataToWatch(context: Context) {
         val putDataRequest = PutDataMapRequest.create("/coffee-messaging-credentials").run {
             dataMap.putString(messagingUserKey, getMessagingUser(context))
             dataMap.putString(messagingPasswordKey, getMessagingPassword(context))
