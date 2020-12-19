@@ -42,7 +42,7 @@ class Messaging:
         except (ConnectionClosedByBroker, ValueError) as e:
             logging.error(e)
             sleep(FIVE_MINUTES)
-        except (AMQPChannelError, AMQPConnectionError) as e:
+        except Exception as e:
             logging.error(e)
 
     def _listen(self):
