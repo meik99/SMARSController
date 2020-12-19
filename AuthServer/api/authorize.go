@@ -8,8 +8,13 @@ import (
 )
 
 func (authApi *AuthApi) MountAuthorizeEndpoint() {
-	log.Printf("mounting '%s' as authorization path", authApi.path)
-	http.HandleFunc(authApi.path, authApi.authorize)
+	authPath := authApi.buildAuthorizePath()
+	log.Printf("mounting '%s' as authorization path", authPath)
+	http.HandleFunc(authPath, authApi.authorize)
+}
+
+func (authApi *AuthApi) buildAuthorizePath() string {
+	return fmt.Sprintf("%s/authorize", authApi.path)
 }
 
 func (authApi *AuthApi) authorize(w http.ResponseWriter, r *http.Request) {
@@ -45,13 +50,19 @@ func (authApi *AuthApi) buildAuthorizeParams(state string) url.Values {
 	params.Add("state", state)
 	params.Add("client_id", authApi.oauthCredentials.ClientId)
 
+	log.Println(fmt.Sprintf("redirect_uri is %s", authApi.buildRedirectUri()))
 	return params
 }
 
 func (authApi *AuthApi) buildRedirectUri() string {
+	redirectPort := authApi.redirectPort
+	if redirectPort == "" {
+		redirectPort = authApi.port
+	}
+
 	return fmt.Sprintf("%s://%s:%s%s",
 		authApi.protocol,
 		authApi.host,
-		authApi.port,
-		authApi.path)
+		redirectPort,
+		authApi.buildRedirectPath())
 }

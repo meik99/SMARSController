@@ -12,6 +12,7 @@ func connectionUrl() string {
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
 
 	if dbUser == "" {
 		log.Println("environment variable DB_USER is not set")
@@ -26,8 +27,13 @@ func connectionUrl() string {
 	} else {
 		log.Printf("using host '%s' to connect to database", dbHost)
 	}
+	if dbPort == "" {
+		log.Println("environment variable DB_PORT is not set")
+	} else {
+		log.Printf("using port '%s' to connect to database", dbPort)
+	}
 
-	return fmt.Sprintf("http://%s:%s@%s:5984/authentication", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"))
+	return fmt.Sprintf("http://%s:%s@%s:%s/authentication", dbUser, dbPassword, dbHost, dbPort)
 }
 
 func getDB() *couchdb.Database {

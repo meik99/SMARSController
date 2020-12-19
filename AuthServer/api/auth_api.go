@@ -32,15 +32,17 @@ type AuthApi struct {
 	host             string
 	port             string
 	path             string
+	redirectPort     string
 	oauthCredentials credentials.OAuthCredentials
 }
 
-func NewAuthApi(protocol, host, port, path string, oauthCredentials credentials.OAuthCredentials) Api {
+func NewAuthApi(protocol, host, port, path string, oauthCredentials credentials.OAuthCredentials, redirectPort string) Api {
 	return &AuthApi{
 		protocol:         protocol,
 		host:             host,
 		port:             port,
 		path:             path,
+		redirectPort:     redirectPort,
 		oauthCredentials: oauthCredentials,
 	}
 }

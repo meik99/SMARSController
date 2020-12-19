@@ -2,7 +2,6 @@ const nano = require('nano');
 const Alarm = require("../entity/Alarm");
 const ApiKey = require("../entity/ApiKey");
 
-// "http://%s:%s@%s:5984/authentication", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST")
 const url = `http://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:5984`
 const connection = nano(url)
 

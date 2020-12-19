@@ -15,12 +15,13 @@ var host = os.Getenv("COFFEE_AUTH_HOST")
 var port = os.Getenv("COFFEE_AUTH_PORT")
 var protocol = os.Getenv("COFFEE_AUTH_PROTOCOL")
 var path = os.Getenv("COFFEE_AUTH_PATH")
+var redirectPort = os.Getenv("COFFEE_AUTH_REDIRECT_PORT")
 
 func handleRequests() {
 	exitIfEnvVarsAreMissing()
 	logEnvVarValues()
 
-	authApi := api.NewAuthApi(protocol, host, port, path, loadCredentials())
+	authApi := api.NewAuthApi(protocol, host, port, path, loadCredentials(), redirectPort)
 	authApi.MountAuthorizeEndpoint()
 	authApi.MountRedirectEndpoint()
 	authApi.MountHealthEndpoint()
