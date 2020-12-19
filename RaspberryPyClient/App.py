@@ -3,7 +3,7 @@ import threading
 import logging
 import os
 import signal
-from mqtt import Mqtt
+from messaging import Messaging
 from raspi import RaspberryClient
 
 mqtt_username = os.getenv("COFFEE_MQTT_USERNAME")
@@ -11,16 +11,14 @@ mqtt_password = os.getenv("COFFEE_MQTT_PASSWORD")
 
 logging.basicConfig(level=logging.INFO)
 
-mqtt = None
+messaging = None
 thread = None
 raspi_client = RaspberryClient()
 
 
 def handle_exit(signum, frame):
-    if mqtt is not None:
-        mqtt.close()
-    if thread is not None:
-        thread.join()
+    if messaging is not None:
+        messaging.close()
 
 
 def received(body):
@@ -39,13 +37,13 @@ if __name__ == "__main__":
         logging.error("MQTT password is not set")
         exit(10)
 
-    mqtt = Mqtt(username=mqtt_username, password=mqtt_password)
-    mqtt.connect()
+    messaging = Messaging(username=mqtt_username, password=mqtt_password)
 
     signal.signal(signal.SIGINT, handle_exit)
     signal.signal(signal.SIGTERM, handle_exit)
 
-    mqtt.callbacks.append(received)
+    messaging.callbacks.append(received)
 
-    thread = threading.Thread(target=mqtt.blocking_retrieve)
+    thread = threading.Thread(target=messaging.listen, daemon=True)
     thread.start()
+    thread.join()
