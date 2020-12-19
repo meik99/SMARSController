@@ -31,8 +31,6 @@ class Mqtt:
                         ),
                         ssl_options=pika.SSLOptions(ssl.create_default_context())
                     ))
-            self.channel = self.connection.channel()
-            self.channel.queue_declare(queue=self.queue)
             logging.info("connected to mqtt broker")
         else:
             logging.error("cannot connect to mqtt broker while connection already exists. call close() first")
@@ -71,8 +69,10 @@ class Mqtt:
         else:
             while self.connected:
                 try:
-                    for method_frame, properties, body in self.channel.consume(self.queue):
+                    self.channel = self.connection.channel()
+                    self.channel.queue_declare(queue=self.queue)
 
+                    for method_frame, properties, body in self.channel.consume(self.queue):
                         # Display the message parts
                         logging.debug(method_frame)
                         logging.debug(properties)
