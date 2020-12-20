@@ -29,7 +29,9 @@ class Messaging:
                     username=self.username,
                     password=self.password
                 ),
-                ssl_options=pika.SSLOptions(ssl.create_default_context())
+                ssl_options=pika.SSLOptions(ssl.create_default_context()),
+                heartbeat=600,
+                blocked_connection_timeout=300
             ))
 
     def listen(self):
@@ -39,11 +41,9 @@ class Messaging:
     def _try_listen(self):
         try:
             self._listen()
-        except (ConnectionClosedByBroker, ValueError) as e:
-            logging.error(e)
-            sleep(FIVE_MINUTES)
         except Exception as e:
             logging.error(e)
+            self.connection = self._create_connection()
 
     def _listen(self):
         self.channel = self.connection.channel()
