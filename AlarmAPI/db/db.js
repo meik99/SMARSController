@@ -2,7 +2,7 @@ const nano = require('nano');
 const Alarm = require("../entity/Alarm");
 const ApiKey = require("../entity/ApiKey");
 
-const url = `http://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:5984`
+const url = `http://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}`
 const connection = nano(url)
 
 module.exports = {
