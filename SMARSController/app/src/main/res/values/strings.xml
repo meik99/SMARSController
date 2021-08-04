@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">SMARSController</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="trying_to_connect">Trying to connect to %s</string>
+    <string name="canceling_discovery">Canceling discovery</string>
+    <string name="socket_connected">Connected socket to %s</string>
+    <string name="written_test_string">Written test string to %s</string>
+    <string name="unknown_exception">Unknown exception occurred</string>
+    <string name="no_uuids_available_for_device">No UUIDs available for device %s</string>
+    <string name="socket_closed">Socket closed for %s</string>
+    <string name="connect">Connect</string>
 </resources>

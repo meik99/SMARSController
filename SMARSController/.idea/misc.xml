@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../layout/custom_preview.xml" value="0.5916666666666667" />
+        <entry key="app/src/main/res/layout/controller_fragment.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_bluetooth_device.xml" value="0.9067708333333333" />
         <entry key="app/src/main/res/layout/main_activity.xml" value="0.4166666666666667" />
         <entry key="app/src/main/res/layout/main_fragment.xml" value="0.4166666666666667" />

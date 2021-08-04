@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -45,6 +46,7 @@ class MainFragment : Fragment(), BluetoothDeviceListAdapter.BluetoothDeviceClick
 
     override fun onClick(bluetoothDevice: BluetoothDevice) {
         BluetoothDeviceRepository.INSTANCE.bluetoothDevice = bluetoothDevice
+        requireActivity().findNavController(R.id.navigation_view).navigate(R.id.action_mainFragment_to_controllerFragment)
     }
 
 }
