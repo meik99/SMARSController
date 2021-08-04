@@ -28,4 +28,17 @@
         android:text="@string/connect"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtStatus" />
+
+    <view
+        android:id="@+id/joystickMovement"
+        class="io.github.controlwear.virtual.joystick.android.JoystickView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        app:JV_borderColor="@color/black_900"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnConnect" />
 </androidx.constraintlayout.widget.ConstraintLayout>

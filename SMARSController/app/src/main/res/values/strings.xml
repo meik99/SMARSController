@@ -9,4 +9,5 @@
     <string name="no_uuids_available_for_device">No UUIDs available for device %s</string>
     <string name="socket_closed">Socket closed for %s</string>
     <string name="connect">Connect</string>
+    <string name="joystick_data">Strength: %d, Angle: %d</string>
 </resources>

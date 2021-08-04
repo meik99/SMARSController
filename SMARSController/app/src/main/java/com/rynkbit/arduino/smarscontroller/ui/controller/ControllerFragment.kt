@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import com.rynkbit.arduino.smarscontroller.R
 import com.rynkbit.arduino.smarscontroller.data.BluetoothDeviceRepository
 import com.rynkbit.arduino.smarscontroller.logic.BluetoothCommunicator
+import io.github.controlwear.virtual.joystick.android.JoystickView
 
 class ControllerFragment : Fragment() {
 
@@ -47,10 +48,13 @@ class ControllerFragment : Fragment() {
         }
 
         startBluetoothSocket()
-
         view.findViewById<Button>(R.id.btnConnect).setOnClickListener {
             bluetoothCommunicator.stopCommunication()
             startBluetoothSocket()
+        }
+
+        view.findViewById<JoystickView>(R.id.joystickMovement).setOnMoveListener { angle, strength ->
+            requireView().findViewById<TextView>(R.id.txtStatus).text = getString(R.string.joystick_data, strength, angle)
         }
     }
 
