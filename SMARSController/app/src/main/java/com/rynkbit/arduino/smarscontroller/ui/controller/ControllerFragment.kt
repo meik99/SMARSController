@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter
 import android.content.pm.ActivityInfo
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import androidx.lifecycle.Observer
 import com.rynkbit.arduino.smarscontroller.R
 import com.rynkbit.arduino.smarscontroller.data.BluetoothDeviceRepository
 import com.rynkbit.arduino.smarscontroller.logic.BluetoothCommunicator
+import com.rynkbit.arduino.smarscontroller.logic.motor.MotorDataConverter
 import io.github.controlwear.virtual.joystick.android.JoystickView
 
 class ControllerFragment : Fragment() {
@@ -55,6 +57,11 @@ class ControllerFragment : Fragment() {
 
         view.findViewById<JoystickView>(R.id.joystickMovement).setOnMoveListener { angle, strength ->
             requireView().findViewById<TextView>(R.id.txtStatus).text = getString(R.string.joystick_data, strength, angle)
+            MotorDataConverter(angle, strength).apply {
+                Log.d(javaClass.simpleName, getString(R.string.left_motor_speed, leftMotorSpeed))
+                Log.d(javaClass.simpleName, getString(R.string.right_motor_speed, rightMotorSpeed))
+                bluetoothCommunicator.sendData(getString(R.string.actuation_message, leftMotorSpeed, rightMotorSpeed))
+            }
         }
     }
 

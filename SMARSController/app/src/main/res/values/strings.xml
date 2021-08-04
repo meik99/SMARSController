@@ -10,4 +10,7 @@
     <string name="socket_closed">Socket closed for %s</string>
     <string name="connect">Connect</string>
     <string name="joystick_data">Strength: %d, Angle: %d</string>
+    <string name="left_motor_speed">Left motor speed: %d\n</string>
+    <string name="right_motor_speed">Right motor speed: %d\n</string>
+    <string name="actuation_message">L%dR%d</string>
 </resources>
